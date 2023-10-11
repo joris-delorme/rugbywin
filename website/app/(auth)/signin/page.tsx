@@ -8,10 +8,10 @@ import { auth } from "@/config/firebase"
 import { firebaseError } from "@/lib/utils"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import axios from "axios"
-
+import { useRouter } from "next/navigation"
 const Page = () => {
     const [user, setUser] = useState({
         email: '',
@@ -39,6 +39,9 @@ const Page = () => {
             setLoading(false)
         }
     }
+
+    const navigate = useRouter()
+    useEffect(() => { if (auth.currentUser) {navigate.push('/')}}, [auth.currentUser])
 
     return (
         <div className="lg:p-8">
