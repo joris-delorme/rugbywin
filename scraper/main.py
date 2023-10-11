@@ -1,4 +1,3 @@
-from flask import Flask, request, jsonify, make_response
 import requests
 import atexit
 import schedule
@@ -11,8 +10,12 @@ from bs4 import BeautifulSoup
 import re
 import os
 from datetime import datetime
+from mailjet_rest import Client
+import base64
+import json
+import sys
 
-app = Flask(__name__)
+print("Script started!")
 
 # Global variables to hold the scraped data and count
 scraped_data = {
@@ -183,7 +186,7 @@ def fetch_rugby_data():
         outcome_bets_dict = {}
 
         for div in soup.find_all(class_="_79bb0"):
-            
+    
             # Iterate through each match inside the div
             for match_div in div.find_all('div', attrs={"data-test-name": "matchEvent"}):
                 
@@ -193,26 +196,29 @@ def fetch_rugby_data():
                 team2 = re.sub(r'[\d\s]+$', '', team_names_divs[1].get_text(strip=True)) if len(team_names_divs) > 1 else 'N/A'
                 
                 # Extract the first group's outcome bets
-                bet_groups = match_div.find_all('div', class_="bb419 _6dae4")
+                bet_groups = match_div.find_all('div', attrs={"data-test-name": "outcomeBet"})
                 
                 # Default values for bets
                 bet1, bet2 = 'N/A', 'N/A'
                 
                 # Consider only the first bet group
-                if bet_groups:
-                    first_group = bet_groups[0]
-                    bet_buttons = first_group.find_all('button', attrs={"data-test-name": "betButton"})
+                try:
+                    if bet_groups:
+                        bet1 = bet_groups[0].find('span').get_text()
+                except IndexError:
+                    print("Error: Some bet groups are missing!")
+                except Exception as e:
+                    print(f"Unexpected error: {e}")
 
-                    # Outcome bet for the first team
-                    odds_span1 = bet_buttons[0].find('span', attrs={"data-test-name": "odds"})
-                    if odds_span1:
-                        bet1 = odds_span1.get_text()
+                try:
+                    if bet_groups:
+                        bet2 = bet_groups[1].find('span').get_text()
+                except IndexError:
+                    print("Error: Some bet groups are missing!")
+                except Exception as e:
+                    print(f"Unexpected error: {e}")
 
-                    # Outcome bet for the second team
-                    odds_span2 = bet_buttons[1].find('span', attrs={"data-test-name": "odds"})
-                    if odds_span2:
-                        bet2 = odds_span2.get_text()
-                
+
                 # Update the dictionary
                 outcome_bets_dict[(team1, team2)] = (bet1, bet2)
 
@@ -251,17 +257,71 @@ def fetch_rugby_data():
             'message': f"Failed to fetch data. Reason: {e}"
         }
 
-@app.route('/matches', methods=['GET'])
+def send_email_with_json(data):
+    try: 
+        # Get your Mailjet API and Secret Key (either from environment variables or securely)
+        api_key = '7e44c6be7ce568327b686da8fab7f6d1'
+        api_secret = '1c2b62cb3ad179964969155bd94ca3f4'
+        
+        mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+        
+        # Create the JSON file
+        with open("rugby_data.json", "w") as file:
+            json.dump(data, file)
+
+        # Email details
+        email_data = {
+            'Messages': [
+                {
+                    "From": {
+                        "Email": "rugbywin.contact@gmail.com",
+                        "Name": "Rugby Win"
+                    },
+                    "To": [
+                        {
+                            "Email": "mathurinleo69@gmail.com",
+                            "Name": "Leo"
+                        }
+                    ],
+                    "Subject": "Rugby Data JSON",
+                    "TextPart": "Here's the JSON data you requested.",
+                    "Attachments": [
+                        {
+                            "ContentType": "application/json",
+                            "Filename": "rugby_data.json",
+                            "Base64Content": base64.b64encode(open("rugby_data.json", "rb").read()).decode("utf-8")
+                        }
+                    ]
+                }
+            ]
+        }
+        
+        # Send the email
+        result = mailjet.send.create(data=email_data)
+        if result.status_code != 200:
+            print(f"Error sending email: {result.json()}")
+            return False
+        return True
+    
+    except Exception as e:
+        # Log the exception for debugging purposes
+        print(f"Exception occurred while sending email: {str(e)}", file=sys.stderr)
+        return False
+
 def get_rugby_data():
     results = fetch_rugby_data()
     
-    if results['status'] == 'error':
-        return make_response(jsonify(results), 500)
-    
-    return jsonify(results['data'])
-    # For simplicity, assuming all_matches_info is the final data structure you'd want to return
-
+    if results['status'] == 'success':
+        # If fetching was successful, send the JSON data via email
+        email_status = send_email_with_json(results['data'])
+        if not email_status:
+            results['email_status'] = 'failed'
+        else:
+            results['email_status'] = 'success'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    data = fetch_rugby_data()
+    send_email_with_json(data)
+
+print("Finished script")
 

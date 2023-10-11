@@ -1,16 +1,10 @@
 from flask import Flask, request, jsonify, make_response
-import requests
-import atexit
-import schedule
-import time
 from threading import Thread
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 import re
-import os
-from datetime import datetime
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
@@ -40,28 +34,29 @@ for div in soup.find_all(class_="_79bb0"):
         team2 = re.sub(r'[\d\s]+$', '', team_names_divs[1].get_text(strip=True)) if len(team_names_divs) > 1 else 'N/A'
         
         # Extract the first group's outcome bets
-        bet_groups = match_div.find_all('div', class_="bb419 _6dae4")
+        bet_groups = match_div.find_all('div', attrs={"data-test-name": "outcomeBet"})
         
         # Default values for bets
         bet1, bet2 = 'N/A', 'N/A'
         
         # Consider only the first bet group
-        if bet_groups:
-            print(1)
-            first_group = bet_groups[0]
-            bet_buttons = first_group.find_all('button', attrs={"data-test-name": "betButton"})
-            print(first_group)
-            print(bet_buttons)
-            # Outcome bet for the first team
-            odds_span1 = bet_buttons[0].find('span', attrs={"data-test-name": "odds"})
-            if odds_span1:
-                bet1 = odds_span1.get_text()
+        try:
+            if bet_groups:
+                bet1 = bet_groups[0].find('span').get_text()
+        except IndexError:
+            print("Error: Some bet groups are missing!")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
 
-            # Outcome bet for the second team
-            odds_span2 = bet_buttons[1].find('span', attrs={"data-test-name": "odds"})
-            if odds_span2:
-                bet2 = odds_span2.get_text()
-        
+        try:
+            if bet_groups:
+                bet2 = bet_groups[1].find('span').get_text()
+        except IndexError:
+            print("Error: Some bet groups are missing!")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+
+
         # Update the dictionary
         outcome_bets_dict[(team1, team2)] = (bet1, bet2)
-        # print(outcome_bets_dict)
+print(outcome_bets_dict)
