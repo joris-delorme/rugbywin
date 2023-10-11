@@ -39,7 +39,7 @@ const Page = () => {
     return (
         <div className="lg:p-8">
             <Button asChild variant="ghost" className="absolute right-10 top-10">
-                <Link href={'/signin'}>S'inscrire</Link>
+                <Link href={'/signin'}>S&apos;inscrire</Link>
             </Button>
             <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                 <div className="flex flex-col space-y-2 text-center mb-8">

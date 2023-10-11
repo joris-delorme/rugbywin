@@ -60,7 +60,7 @@ const Page = () => {
                     <Input placeholder="monmotdepasse*" type="password" id="password" onChange={(e) => setUser(old => ({ ...old, password: e.target.value }))} />
                 </div>
 
-                <Button onClick={() => handler()} disabled={loading}>{loading && <Loader />}S'inscrire</Button>
+                <Button onClick={() => handler()} disabled={loading}>{loading && <Loader />}S&apos;inscrire</Button>
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t"></span>
