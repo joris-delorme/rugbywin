@@ -18,7 +18,7 @@ const Page = () => {
 
     return (
         <div className="h-screen w-screen pt-32 flex flex-col items-center">
-            <div className="font-semibold flex items-center text-3xl mx-auto px-6 py-2 bg-background/30 backdrop-blur-md border border-white/30 rounded-xl">
+            <div className="font-semibold flex items-center sm:text-3xl text-xl mx-auto px-6 py-2 bg-background/30 backdrop-blur-md border border-white/30 rounded-xl">
                 <ReactCountryFlag countryCode={getCode(match?.teams.team_a || '') || 'GB'} svg className="mr-2" />
                 {match?.teams.team_a} vs
                 <ReactCountryFlag countryCode={getCode(match?.teams.team_b || '') || 'GB'} svg className="ml-4 mr-2" />
