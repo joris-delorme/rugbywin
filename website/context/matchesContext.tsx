@@ -31,7 +31,7 @@ export const MatchesProvider = ({ children }: { children: ReactNode }) => {
 export const useMatches = () => {
   const context = useContext(MatchesContext)
   if (context === undefined) {
-    throw new Error('useBorn must be used within an BornProvider')
+    throw new Error('useMatches must be used within an MatchesProvider')
   }
   return context
 }

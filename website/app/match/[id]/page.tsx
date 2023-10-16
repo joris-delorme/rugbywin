@@ -17,15 +17,19 @@ const Page = () => {
     }, [matches])
 
     return (
-        <div className="h-screen w-screen pt-32 flex flex-col items-center">
-            <div className="font-semibold flex items-center sm:text-3xl text-xl mx-auto px-6 py-2 bg-background/30 backdrop-blur-md border border-white/30 rounded-xl">
-                <ReactCountryFlag countryCode={getCode(match?.teams.team_a || '') || 'GB'} svg className="mr-2" />
-                {match?.teams.team_a} vs
-                <ReactCountryFlag countryCode={getCode(match?.teams.team_b || '') || 'GB'} svg className="ml-4 mr-2" />
-                {match?.teams.team_b}
+        <div className="min-h-screen w-full">
+            <div className="fixed top-32 left-1/2 -translate-x-1/2 -z-10 font-semibold flex items-center sm:text-3xl w-fit text-xl mx-auto px-6 py-2 bg-background/30 backdrop-blur-md border border-white/30 rounded-xl">
+                <div className="flex gap-2">
+                <span className="flex w-fulle"><ReactCountryFlag countryCode={getCode(match?.teams.team_a || '') || 'GB'} svg className="mr-2" /> <span className="whitespace-nowrap">{match?.teams.team_a}</span> </span>
+                <span className="block">vs</span>
+                <span className="flex"><ReactCountryFlag countryCode={getCode(match?.teams.team_b || '') || 'GB'} svg className="ml-4 mr-2" /> <span className="whitespace-nowrap">{match?.teams.team_b}</span> </span>
+                </div>
             </div>
-            <div className="absolute -z-10 h-screen w-full top-0 left-0">
+            <div className="h-[80vh] -z-20 fixed top-0 left-0 w-full">
                 <MapComponent lat={match?.latitude || 0} lon={match?.longitude || 0} />
+            </div>
+            <div className="h-screen bg-background rounded-t-3xl mt-[70vh]">
+
             </div>
         </div>
     )

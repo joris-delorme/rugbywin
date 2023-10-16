@@ -41,6 +41,7 @@ for div in soup.find_all(class_="_79bb0"):
         
         # Extract the first group's outcome bets
         bet_groups = match_div.find_all('div', class_="bb419 _6dae4")
+        print(len(bet_groups))
         
         # Default values for bets
         bet1, bet2 = 'N/A', 'N/A'
@@ -64,4 +65,4 @@ for div in soup.find_all(class_="_79bb0"):
         
         # Update the dictionary
         outcome_bets_dict[(team1, team2)] = (bet1, bet2)
-        # print(outcome_bets_dict)
+        print(outcome_bets_dict)
