@@ -26,7 +26,7 @@ const Page = () => {
             })
         } catch (err) {
             toast({
-                title: "Un erreur de connexion c'est produite",
+                title: "Une erreur de connexion s'est produite",
                 description: firebaseError(err as Error),
                 variant: "destructive"
             })
@@ -43,7 +43,7 @@ const Page = () => {
             <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                 <div className="flex flex-col space-y-2 text-center mb-8">
                     <h1 className="text-2xl font-semibold tracking-tight">Mot de passe oublié</h1>
-                    <p className="text-sm text-muted-foreground">Entrez vos informations en dessous pour récuprer votre mot de passe</p>
+                    <p className="text-sm text-muted-foreground">Entrez vos informations en dessous pour récuperer votre mot de passe</p>
                 </div>
 
                 <div className="grid w-full items-center gap-1.5">
@@ -51,7 +51,7 @@ const Page = () => {
                     <Input placeholder="nom@exemple.com" type="email" id="email" onChange={(e) => setEmail(e.target.value)} />
                 </div>
 
-                <Button onClick={() => handler()} disabled={loading}>{loading && <Loader />}Récuprer</Button>
+                <Button onClick={() => handler()} disabled={loading}>{loading && <Loader />}Récuperer</Button>
             </div>
         </div>
     )

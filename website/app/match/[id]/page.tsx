@@ -6,6 +6,7 @@ import { getCode } from "country-list"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import ReactCountryFlag from "react-country-flag"
+import { getTranslatedCountry } from '../../../components/match/countriesMap'; // Remplacez par le chemin correct
 
 const Page = () => {
 
@@ -18,12 +19,18 @@ const Page = () => {
     }, [matches])
 
     return (
-        <div className="min-h-screen w-full">
-            <div className="fixed top-32 left-1/2 -translate-x-1/2 -z-10 font-semibold flex items-center sm:text-3xl w-fit text-xl mx-auto px-6 py-2 bg-background/30 backdrop-blur-md border border-white/30 rounded-xl">
-                <div className="flex gap-2">
-                <span className="flex w-fulle"><ReactCountryFlag countryCode={getCode(match?.teams.team_a || '') || 'GB'} svg className="mr-2" /> <span className="whitespace-nowrap">{match?.teams.team_a}</span> </span>
-                <span className="block">vs</span>
-                <span className="flex"><ReactCountryFlag countryCode={getCode(match?.teams.team_b || '') || 'GB'} svg className="ml-4 mr-2" /> <span className="whitespace-nowrap">{match?.teams.team_b}</span> </span>
+        <div className="min-h-screen">
+            <div className="fixed top-32 left-1/2 -translate-x-1/2 -z-10 font-semibold flex items-center px-6 py-2 bg-background/30 backdrop-blur-md border border-white/30 rounded-xl">
+                <div className="flex justify-between gap-2 min-w-max">
+                    <span className="flex items-center min-w-fit">
+                        <ReactCountryFlag countryCode={getCode(match?.teams.team_a || '') || 'GB'} svg className="mr-4 text-xl" />
+                        <span className="whitespace-nowrap sm:text-xl text-base">{getTranslatedCountry(match?.teams.team_a || '')}</span>
+                    </span>
+                    <span className="block sm:text-xl text-base">vs</span>
+                    <span className="flex items-center min-w-fit">
+                        <ReactCountryFlag countryCode={getCode(match?.teams.team_b || '') || 'GB'} svg className="ml-2 mr-2 text-xl" />
+                        <span className="whitespace-nowrap sm:text-xl text-base">{getTranslatedCountry(match?.teams.team_b || '')}</span>
+                    </span>
                 </div>
             </div>
             <div className="h-[80vh] -z-20 fixed top-0 left-0 w-full">

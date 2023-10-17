@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import countries from './countriesMap';
+import countries, { getArticleByGender, getArticleWithApostrophe, getTranslatedCountry, getTranslatedCountryPossessive } from './countriesMap';
 
 interface HistoryProps {
     home_team: string
@@ -24,42 +24,6 @@ export function History({ home_team, away_team }: HistoryProps) {
         home_team_victorys: 0,
         away_team_victorys: 0
     })
-
-    const getArticleByGender = (country: string) => {
-        const gender = countries[country]?.gender || 'm';
-        return gender === 'f' ? 'la' : 'le';
-    };
-    
-    const countriesWithApostrophe = [
-        "Afrique du Sud",
-        "Angleterre",
-        "Australie",
-        "Irlande",
-        "Écosse",
-        "Argentine",
-        "Italie",
-        "Uruguay"
-    ];
-    
-    const getArticleWithApostrophe = (country: string) => {
-        const translatedCountry = getTranslatedCountry(country);
-        
-        if (countriesWithApostrophe.includes(translatedCountry)) {
-            return "l'";
-        }
-        return getArticleByGender(country) + ' ';
-    };       
-    
-    const getTranslatedCountry = (country: string) => countries[country]?.translation || country;
-    
-    const getTranslatedCountryPossessive = (country: string) => {
-        const translatedCountry = getTranslatedCountry(country);
-        
-        if (countriesWithApostrophe.includes(translatedCountry)) {
-            return `l'${translatedCountry}`;
-        }
-        return `${getArticleByGender(country)} ${translatedCountry}`;
-    };    
     
     const homeTeamArticle = getArticleByGender(home_team);
     const awayTeamArticle = getArticleByGender(away_team);

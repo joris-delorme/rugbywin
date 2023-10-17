@@ -5,6 +5,7 @@ import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { getCode } from 'country-list';
 import Link from "next/link";
+import { getTranslatedCountry } from './match/countriesMap'; // Remplacez par le chemin correct
 
 export const Search = () => {
     const { matches } = useMatches()
@@ -33,7 +34,7 @@ export const Search = () => {
                 value={search}
                 onChange={handleSearch}
                 className="w-full outline-none bg-transparent placeholder:text-muted-foreground"
-                placeholder="Search for a team..."
+                placeholder="Cherchez une équipe..."
             />
             {results.length > 0 && (
                 <div className="mt-2 z-10 max-h-80 overflow-y-scroll">
@@ -41,9 +42,10 @@ export const Search = () => {
                         <Link href={`/match/${match.id}`} key={match.id} className="p-2 border-b hover:bg-muted/80 cursor-pointer transition-all block">
                             <div className="font-semibold">
                                 <ReactCountryFlag countryCode={getCode(match.teams.team_a) || 'GB'} svg className="mr-2" />
-                                {match.teams.team_a} vs 
+                                {getTranslatedCountry(match.teams.team_a)} vs 
                                 <ReactCountryFlag countryCode={getCode(match.teams.team_b) || 'GB'} svg className="mx-2" />
-                                {match.teams.team_b}</div>
+                                {getTranslatedCountry(match.teams.team_b)}
+                            </div>
                             <div className="text-sm text-muted-foreground">{match.date}</div>
                             <div className="text-sm text-muted-foreground">{match.venue}</div>
                         </Link>

@@ -31,4 +31,40 @@ const countries: Record<string, CountryInfo> = {
     // Ajoutez d'autres pays si nécessaire
 };
 
+const countriesWithApostrophe = [
+    "Afrique du Sud",
+    "Angleterre",
+    "Australie",
+    "Irlande",
+    "Écosse",
+    "Argentine",
+    "Italie",
+    "Uruguay"
+];
+
+export const getArticleByGender = (country: string) => {
+    const gender = countries[country]?.gender || 'm';
+    return gender === 'f' ? 'la' : 'le';
+};
+
+export const getArticleWithApostrophe = (country: string) => {
+    const translatedCountry = getTranslatedCountry(country);
+    
+    if (countriesWithApostrophe.includes(translatedCountry)) {
+        return "l'";
+    }
+    return getArticleByGender(country) + ' ';
+};
+
+export const getTranslatedCountry = (country: string) => countries[country]?.translation || country;
+
+export const getTranslatedCountryPossessive = (country: string) => {
+    const translatedCountry = getTranslatedCountry(country);
+    
+    if (countriesWithApostrophe.includes(translatedCountry)) {
+        return `l'${translatedCountry}`;
+    }
+    return `${getArticleByGender(country)} ${translatedCountry}`;
+};
+
 export default countries;
