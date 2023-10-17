@@ -1,6 +1,6 @@
 'use client'
 import MapComponent from "@/components/map"
-import { History } from "@/components/matche/history"
+import { History } from "@/components/match/history"
 import { useMatches } from "@/context/matchesContext"
 import { getCode } from "country-list"
 import { useParams } from "next/navigation"
