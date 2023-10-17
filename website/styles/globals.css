@@ -74,6 +74,8 @@
   body {
     @apply text-foreground;
     background: #020308;
+    overflow-x: hidden;
+    width: 100vw;
   }
 
   body::before {
