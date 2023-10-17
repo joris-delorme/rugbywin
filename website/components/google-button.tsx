@@ -20,13 +20,13 @@ const GoogleButton = () => {
                 email: userCreditential.user.email
             })
         } catch (err) {
-            console.log(err);
-            
+            /*
             toast({
                 title: "Un erreur de connexion c'est produite",
                 description: (err as Error).message,
                 variant: "destructive"
             })
+            */
         } finally {
             setLoading(false)
         }

@@ -13,3 +13,19 @@ interface IMatche {
     },
     venue: string
 }
+
+interface RugbyMatch {
+    id: string;
+    date: string;
+    home_team: string;
+    away_team: string;
+    home_score: number;
+    away_score: number;
+    competition: string;
+    stadium: string;
+    city: string;
+    country: string;
+    neutral: boolean;
+    world_cup: boolean;
+    winner: 'home_team' | 'away_team' | null;
+}

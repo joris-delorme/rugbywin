@@ -36,7 +36,7 @@ const Page = () => {
     }
 
     return (
-        <div className="lg:p-8">
+        <div className="p-8">
             <Button asChild variant="ghost" className="absolute right-10 top-10">
                 <Link href={'/login'}>Se connecter</Link>
             </Button>

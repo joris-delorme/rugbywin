@@ -1,5 +1,6 @@
 'use client'
 import MapComponent from "@/components/map"
+import { History } from "@/components/matche/history"
 import { useMatches } from "@/context/matchesContext"
 import { getCode } from "country-list"
 import { useParams } from "next/navigation"
@@ -28,8 +29,8 @@ const Page = () => {
             <div className="h-[80vh] -z-20 fixed top-0 left-0 w-full">
                 <MapComponent lat={match?.latitude || 0} lon={match?.longitude || 0} />
             </div>
-            <div className="h-screen bg-background rounded-t-3xl mt-[70vh]">
-
+            <div className="h-screen bg-background mt-[70vh] lg:p-20 p-10">
+                <History home_team={match?.teams.team_a || ''} away_team={match?.teams.team_b || ''} />
             </div>
         </div>
     )
