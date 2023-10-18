@@ -321,15 +321,19 @@ def fetch_rugby_data():
         # End of the unibet script
 
         odds = fetch_oldbets()  # Fetch odds data
+        
+        # Function to convert team name to ID format
+        def team_name_to_id(name):
+            return name.lower().replace(" ", "_")
 
         # Assigning bets to matches in all_matches_info
         for match_info in all_matches_info:
-            team_a = match_info["teams"]["team_a"]
-            team_b = match_info["teams"]["team_b"]
+            team_a = team_name_to_id(match_info["teams"]["team_a"])
+            team_b = team_name_to_id(match_info["teams"]["team_b"])
 
             # Insert the French names into the teams dictionary
-            match_info["teams"]["team_a"]
-            match_info["teams"]["team_b"]
+            match_info["teams"]["team_a"] = team_a
+            match_info["teams"]["team_b"] = team_b
 
             # Check if the match has finished
             if match_info["status"].lower() == "result":
