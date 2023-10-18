@@ -4,8 +4,8 @@ interface IMatche {
     latitude: number,
     longitude: number,
     teams: {
-        bet_a: number | "Closed",
-        bet_b: number | "Closed",
+        bet_a: number,
+        bet_b: number,
         score_a: number | "N/A",
         score_b: number | "N/A",
         team_a: string,
@@ -14,7 +14,7 @@ interface IMatche {
     venue: string
 }
 
-interface RugbyMatch {
+interface IHistoryMatch {
     id: string;
     date: string;
     home_team: string;

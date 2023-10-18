@@ -19,7 +19,7 @@ interface IHistoryStats {
 
 export function History({ home_team, away_team }: HistoryProps) {
 
-    const [matches, setMatches] = useState<RugbyMatch[]>([])
+    const [matches, setMatches] = useState<IHistoryMatch[]>([])
     const [stats, setStats] = useState<IHistoryStats>({
         home_team_victorys: 0,
         away_team_victorys: 0
@@ -35,14 +35,14 @@ export function History({ home_team, away_team }: HistoryProps) {
     useEffect(() => {
         const getMatches = async () => {
             const matchesRef = collection(db, "history")
-            const data: RugbyMatch[] = []
+            const data: IHistoryMatch[] = []
             let q = query(matchesRef, or(
                 and(where("home_team", "==", home_team), where("away_team", "==", away_team)), 
                 and(where("home_team", "==", away_team), where("away_team", "==", home_team))
             ))
             const querySnapshot = await getDocs(q)
             querySnapshot.forEach((doc) => {
-                data.push({ id: doc.id, ...doc.data() } as RugbyMatch)
+                data.push({ id: doc.id, ...doc.data() } as IHistoryMatch)
             })
             setMatches(data)
             setStats({
@@ -53,7 +53,7 @@ export function History({ home_team, away_team }: HistoryProps) {
         if (!matches.length && home_team) getMatches()
     }, [home_team])
 
-    const groupedByYear = matches.reduce<Record<string, RugbyMatch[]>>(
+    const groupedByYear = matches.reduce<Record<string, IHistoryMatch[]>>(
         (acc, match) => {
             const year = new Date(match.date).getFullYear().toString();
             if (!acc[year]) {
@@ -74,7 +74,7 @@ export function History({ home_team, away_team }: HistoryProps) {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="h-[300px] overflow-y-scroll">
+                <div className="h-[600px] overflow-y-scroll">
                     {Object.entries(groupedByYear).reverse().map(([year, matches]) => (
                         <div key={year} className="mb-6">
                             <h2 className="text-lg font-semibold mb-1">{year}</h2>

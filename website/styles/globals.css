@@ -89,6 +89,18 @@
     background: radial-gradient(50.04% 50.04% at 50% 0%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%);
   }
 
+  .email {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100vw;
+  }
+
+  h1 {
+    font-size: clamp(20px, 5vw, 100px);
+  }
+
   .mapboxgl-map {
     z-index: -10 !important;
   }
