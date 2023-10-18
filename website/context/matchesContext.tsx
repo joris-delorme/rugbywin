@@ -11,6 +11,7 @@ const MatchesContext = createContext<MatchesContextProps | undefined>(undefined)
 
 export const MatchesProvider = ({ children }: { children: ReactNode }) => {
   const [matches, setMatches] = useState<IMatche[]>([])
+  const [historyMatches, setHistoryMatches] = useState<IMatche[]>([])
 
     const getMatches = async () => {
         const data = await getDocs(collection(db, 'matches'))

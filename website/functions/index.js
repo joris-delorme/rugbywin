@@ -45,3 +45,42 @@ exports.newsletter = functions.https.onRequest((req, res) => {
     }
   })
 })
+
+exports.triggernewmatch = functions.firestore
+  .document("matches/{documentId}")
+  .onCreate(async (snap, context) => {
+    const data = snap.data()
+    console.log('Document with ID:', context.params.documentId, 'deleted.');
+    console.log('Deleted document data:', data);
+
+    const request = mailjet
+      .post("send", { 'version': 'v3.1' })
+      .request({
+        "Messages": [
+          {
+            "From": {
+              "Email": "rugbywin.contact@gmail.com",
+              "Name": "Rugby Win"
+            },
+            "Recipients": [
+              {
+                "ListID": 10366803
+              }
+            ],
+            "TemplateID": 5189189,
+            "TemplateLanguage": true,
+            "Subject": `🔥 Nouveau Match: {{var:home_team:"France"}} vs {{var:away_team:"Italy"}} 🔥`,
+            "Variables": {
+              "home_team": data.teams.home_team,
+              "away_team": data.teams.away_team
+            }
+          }
+        ]
+      })
+
+    try {
+      await request
+    } catch (err) {
+      console.log(err.message)
+    }
+  })
