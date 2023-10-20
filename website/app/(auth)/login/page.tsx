@@ -46,11 +46,11 @@ const Page = () => {
                 <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                     <div className="flex flex-col space-y-2 text-center mb-8">
                         <h1 className="text-2xl font-semibold tracking-tight">Connexion</h1>
-                        <p className="text-sm text-muted-foreground">Entrez vos inforamtions en dessous.</p>
+                        <p className="text-sm text-muted-foreground">Entrez vos informations en dessous.</p>
                     </div>
 
                     <div className="grid w-full items-center gap-1.5">
-                        <Label htmlFor="email">Votre meilleur adresse mail.</Label>
+                        <Label htmlFor="email">Votre meilleure adresse mail.</Label>
                         <Input placeholder="nom@exemple.com" type="email" id="email" onChange={(e) => setUser(old => ({ ...old, email: e.target.value }))} />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
@@ -68,7 +68,7 @@ const Page = () => {
                         </div>
                     </div>
                     <GoogleButton />
-                    <p className="t-muted-foreground text-xs px-8 text-center">En cliquan sur le bouton, vous acceptez nos <Link className="hover:text-primary underline underline-offset-2" href={'#'}>Terms of Service</Link> et <Link href={"#"} className="hover:text-primary underline underline-offset-2">Politique de Confidentialité</Link>.</p>
+                    <p className="t-muted-foreground text-xs px-8 text-center">En cliquant sur le bouton, vous acceptez nos <Link className="hover:text-primary underline underline-offset-2" href={'#'}>Mentions Légales</Link> et <Link href={"#"} className="hover:text-primary underline underline-offset-2">Politique de Confidentialité</Link>.</p>
                 </div>
             </div>
             <Link href='/signin' className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center"><span className="whitespace-nowrap">Vous n&apos;avez pas de compte ?</span> <span className="underline" >Inscrivez-vous</span></Link>

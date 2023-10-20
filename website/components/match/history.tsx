@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import countries, { getArticleByGender, getArticleWithApostrophe, getTranslatedCountry, getTranslatedCountryPossessive } from './countriesMap';
 
 interface HistoryProps {
     home_team: string
@@ -23,6 +24,13 @@ export function History({ home_team, away_team }: HistoryProps) {
         home_team_victorys: 0,
         away_team_victorys: 0
     })
+    
+    const homeTeamArticle = getArticleByGender(home_team);
+    const awayTeamArticle = getArticleByGender(away_team);
+    const homeTeamTranslated = getTranslatedCountry(home_team);
+    const awayTeamTranslated = getTranslatedCountry(away_team);
+    const homeTeamArticleApostrophe = getArticleWithApostrophe(home_team);
+    const awayTeamArticleApostrophe = getArticleWithApostrophe(away_team);
 
     useEffect(() => {
         const getMatches = async () => {
@@ -60,10 +68,9 @@ export function History({ home_team, away_team }: HistoryProps) {
     return (
         <Card className="w-fit max-w-xl">
             <CardHeader>
-                <CardTitle>Histrique</CardTitle>
+                <CardTitle>Historique</CardTitle>
                 <CardDescription>
-                    La {home_team} à gagné <span className="font-bold">{stats?.home_team_victorys}</span> contre la {away_team} et perdu <span className="font-bold">{stats?.away_team_victorys}</span>.
-                    Basé sur l'historique {home_team} a <span className="font-bold">{Math.round(stats.away_team_victorys / (stats.home_team_victorys+stats.away_team_victorys)  * 100)}%</span> de chance et {away_team} a <span className="font-bold">{Math.round(stats.home_team_victorys / (stats.home_team_victorys+stats.away_team_victorys) * 100)}%</span>.
+                    {homeTeamArticleApostrophe.charAt(0).toUpperCase() + homeTeamArticleApostrophe.slice(1)}{homeTeamTranslated} a gagné <span className="font-bold">{stats?.home_team_victorys}</span> matchs contre {awayTeamArticleApostrophe}{awayTeamTranslated} et en a perdu <span className="font-bold">{stats?.away_team_victorys}</span>. Basé sur l'historique, {getTranslatedCountryPossessive(home_team)} a <span className="font-bold">{Math.round(stats.away_team_victorys / (stats.home_team_victorys+stats.away_team_victorys)  * 100)}%</span> de chance de gagner et {getTranslatedCountryPossessive(away_team)} en a <span className="font-bold">{Math.round(stats.home_team_victorys / (stats.home_team_victorys+stats.away_team_victorys) * 100)}%</span>.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -74,9 +81,9 @@ export function History({ home_team, away_team }: HistoryProps) {
                             <table className="w-full border-collapse">
                                 <thead>
                                     <tr>
-                                        <th className="border p-1 text-sm">Informtaion</th>
-                                        <th className="border p-1 text-sm">Home</th>
-                                        <th className="border p-1 text-sm">Away</th>
+                                        <th className="border p-1 text-sm">Information</th>
+                                        <th className="border p-1 text-sm">Domicile</th>
+                                        <th className="border p-1 text-sm">Extérieur</th>
                                     </tr>
                                 </thead>
                                 <tbody>
