@@ -11,18 +11,8 @@ export const Search = () => {
     const { matches, teams } = useMatches();  // Extract teams here
     const [search, setSearch] = useState("");
     const [results, setResults] = useState<IMatche[]>([]);
-    
-    // Convert the matches to include translated names
-    const translatedMatches = matches.map(match => ({
-        ...match,
-        teams: {
-            ...match.teams,
-            team_a: getTranslatedCountry(match.teams.team_a, teams),
-            team_b: getTranslatedCountry(match.teams.team_b, teams)
-        }
-    }));
 
-    const fuse = new Fuse(translatedMatches, {
+    const fuse = new Fuse(matches, {
         keys: ['teams.team_a', 'teams.team_b'],
         threshold: 0.3
     });
@@ -50,9 +40,9 @@ export const Search = () => {
                     {results.slice(0,10).map(match => (
                         <Link href={`/match/${match.id}`} key={match.id} className="p-2 border-b hover:bg-muted/80 cursor-pointer transition-all block">
                             <div className="font-semibold">
-                                <ReactCountryFlag countryCode={getCode(match.teams.team_a) || 'GB'} svg className="mr-2" />
+                                <span className="mr-2 text-xl">{teams && teams[match.teams.team_a] ? teams[match.teams.team_a].unicode : '🇬🇧'}</span>
                                 {getTranslatedCountry(match.teams.team_a, teams)} vs 
-                                <ReactCountryFlag countryCode={getCode(match.teams.team_b) || 'GB'} svg className="mx-2" />
+                                <span className="mx-2 text-xl">{teams && teams[match.teams.team_b] ? teams[match.teams.team_b].unicode : '🇬🇧'}</span>
                                 {getTranslatedCountry(match.teams.team_b, teams)}
                             </div>
                             <div className="text-sm text-muted-foreground">{match.date}</div>

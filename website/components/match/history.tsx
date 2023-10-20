@@ -91,8 +91,12 @@ export function History({ home_team, away_team }: HistoryProps) {
                                             <td className="border p-2 text-xs max-w-[150px]">
                                                 Le {match.date} à {match.city} au {match.stadium}.
                                             </td>
-                                            <td className="border p-2 text-xs">{match.home_team}: {match.home_score}</td>
-                                            <td className="border p-2 text-xs">{match.away_team}: {match.away_score}</td>
+                                            <td className="border p-2 text-xs">
+                                                {getTranslatedCountry(match.home_team, teams)}: {match.home_score}
+                                            </td>
+                                            <td className="border p-2 text-xs">
+                                                {getTranslatedCountry(match.away_team, teams)}: {match.away_score}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
