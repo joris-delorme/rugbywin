@@ -1,11 +1,11 @@
 import { db } from "@/config/firebase";
 import { getCode } from "country-list";
-import { and, collection, getDocs, or, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { and, collection, getDocs, or, query, where } from "firebase/firestore";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import countries, { getArticleByGender, getArticleWithApostrophe, getTranslatedCountry, getTranslatedCountryPossessive } from './countriesMap';
+import { getArticleByGender, getTranslatedCountry, getTranslatedCountryPossessive } from './countriesMap';
+import { useMatches } from "@/context/matchesContext";
 
 interface HistoryProps {
     home_team: string
@@ -24,13 +24,12 @@ export function History({ home_team, away_team }: HistoryProps) {
         home_team_victorys: 0,
         away_team_victorys: 0
     })
-    
-    const homeTeamArticle = getArticleByGender(home_team);
-    const awayTeamArticle = getArticleByGender(away_team);
-    const homeTeamTranslated = getTranslatedCountry(home_team);
-    const awayTeamTranslated = getTranslatedCountry(away_team);
-    const homeTeamArticleApostrophe = getArticleWithApostrophe(home_team);
-    const awayTeamArticleApostrophe = getArticleWithApostrophe(away_team);
+    const { teams } = useMatches(); // Uncomment this if you are fetching teams using context
+
+    const homeTeamArticle = getArticleByGender(home_team, teams);
+    const awayTeamArticle = getArticleByGender(away_team, teams);
+    const homeTeamTranslated = getTranslatedCountry(home_team, teams);
+    const awayTeamTranslated = getTranslatedCountry(away_team, teams);
 
     useEffect(() => {
         const getMatches = async () => {
@@ -70,7 +69,7 @@ export function History({ home_team, away_team }: HistoryProps) {
             <CardHeader>
                 <CardTitle>Historique</CardTitle>
                 <CardDescription>
-                    {homeTeamArticleApostrophe.charAt(0).toUpperCase() + homeTeamArticleApostrophe.slice(1)}{homeTeamTranslated} a gagné <span className="font-bold">{stats?.home_team_victorys}</span> matchs contre {awayTeamArticleApostrophe}{awayTeamTranslated} et en a perdu <span className="font-bold">{stats?.away_team_victorys}</span>. Basé sur l'historique, {getTranslatedCountryPossessive(home_team)} a <span className="font-bold">{Math.round(stats.away_team_victorys / (stats.home_team_victorys+stats.away_team_victorys)  * 100)}%</span> de chance de gagner et {getTranslatedCountryPossessive(away_team)} en a <span className="font-bold">{Math.round(stats.home_team_victorys / (stats.home_team_victorys+stats.away_team_victorys) * 100)}%</span>.
+                    {homeTeamArticle.charAt(0).toUpperCase() + homeTeamArticle.slice(1)} {homeTeamTranslated} a gagné <span className="font-bold">{stats?.home_team_victorys}</span> matchs contre {awayTeamArticle} {awayTeamTranslated} et en a perdu <span className="font-bold">{stats?.away_team_victorys}</span>. Basé sur l'historique, {getTranslatedCountryPossessive(home_team, teams)} a <span className="font-bold">{Math.round(stats.away_team_victorys / (stats.home_team_victorys+stats.away_team_victorys)  * 100)}%</span> de chance de gagner et {getTranslatedCountryPossessive(away_team, teams)} en a <span className="font-bold">{Math.round(stats.home_team_victorys / (stats.home_team_victorys+stats.away_team_victorys) * 100)}%</span>.
                 </CardDescription>
             </CardHeader>
             <CardContent>

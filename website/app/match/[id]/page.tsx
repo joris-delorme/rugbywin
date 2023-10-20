@@ -14,6 +14,7 @@ const Page = () => {
     const [match, setMatch] = useState<IMatche | null>()
     const { matches } = useMatches()
     const params = useParams()
+    const { teams } = useMatches(); // Uncomment this if you are fetching teams using context
 
     useEffect(() => {
         setMatch(matches.find(x => x.id === params.id))
@@ -25,12 +26,12 @@ const Page = () => {
                 <div className="flex justify-between gap-2 min-w-max">
                     <span className="flex items-center min-w-fit">
                         <ReactCountryFlag countryCode={getCode(match?.teams.team_a || '') || 'GB'} svg className="mr-4 text-xl" />
-                        <span className="whitespace-nowrap sm:text-xl text-base">{getTranslatedCountry(match?.teams.team_a || '')}</span>
+                        <span className="whitespace-nowrap sm:text-xl text-base">{getTranslatedCountry(match?.teams.team_a || '', teams)}</span>
                     </span>
                     <span className="block sm:text-xl text-base">vs</span>
                     <span className="flex items-center min-w-fit">
                         <ReactCountryFlag countryCode={getCode(match?.teams.team_b || '') || 'GB'} svg className="ml-2 mr-2 text-xl" />
-                        <span className="whitespace-nowrap sm:text-xl text-base">{getTranslatedCountry(match?.teams.team_b || '')}</span>
+                        <span className="whitespace-nowrap sm:text-xl text-base">{getTranslatedCountry(match?.teams.team_b || '', teams)}</span>
                     </span>
                 </div>
             </div>
