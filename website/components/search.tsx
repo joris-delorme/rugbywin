@@ -14,7 +14,7 @@ export const Search = () => {
 
     const fuse = new Fuse(matches, {
         keys: ['teams.team_a', 'teams.team_b'],
-        threshold: 0.3
+        threshold: 0.9
     });
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

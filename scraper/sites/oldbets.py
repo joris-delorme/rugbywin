@@ -3,6 +3,7 @@ import requests
 import json
 import re
 from datetime import datetime, timedelta
+import time
 
 
 def american_to_european(american_odds):
@@ -21,17 +22,17 @@ def fetch_oldbets():
     response = requests.get(
     url='https://proxy.scrapeops.io/v1/',
     params={
-        'api_key': '26052b57-03c7-499e-abd3-c38571cddb15',
-        'url': 'https://www.oddsportal.com/rugby-union/world/world-cup/results/', 
-        'wait': 5000,
-        'scroll': 3000,
-        'wait': 5000,
+        'api_key': 'ce51357c-46eb-4915-8424-c86624296524',
+        'url': 'https://www.oddsportal.com/rugby-union/world/world-cup/results/',
+        'wait': 8925,
+        'scroll': 3201,
+        'wait': 6385,
     },
     )
 
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(response.text, 'html.parser')
-
+    
     main_div = soup.find("div", attrs={"data-v-012eb9f0": ""})
     if not main_div:
         print("Failed to find the main div. The website structure might have changed.")
