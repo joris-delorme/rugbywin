@@ -2,12 +2,10 @@ import { db } from "@/config/firebase";
 import { useEffect, useState } from "react";
 import { and, collection, getDocs, or, query, where } from "firebase/firestore";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { getArticleByGender, getTranslatedCountry, getTranslatedCountryPossessive } from './countriesMap';
-import { useMatches } from "@/context/matchesContext";
 
 interface HistoryProps {
-    home_team: string
-    away_team: string
+    home_team?: ITeam
+    away_team?: ITeam
 }
 
 interface IHistoryStats {
@@ -22,31 +20,32 @@ export function History({ home_team, away_team }: HistoryProps) {
         home_team_victorys: 0,
         away_team_victorys: 0
     })
-    const { teams } = useMatches(); // Uncomment this if you are fetching teams using context
-
-    const homeTeamArticle = getArticleByGender(home_team, teams);
-    const awayTeamArticle = getArticleByGender(away_team, teams);
-    const homeTeamTranslated = getTranslatedCountry(home_team, teams);
-    const awayTeamTranslated = getTranslatedCountry(away_team, teams);
 
     useEffect(() => {
         const getMatches = async () => {
+            if (!home_team || !away_team) return
             const matchesRef = collection(db, "history")
             const data: IHistoryMatch[] = []
             let q = query(matchesRef, or(
-                and(where("home_team", "==", home_team), where("away_team", "==", away_team)), 
-                and(where("home_team", "==", away_team), where("away_team", "==", home_team))
+                and(where("home_team", "==", home_team.id), where("away_team", "==", away_team.id)), 
+                and(where("home_team", "==", away_team.id), where("away_team", "==", home_team.id))
             ))
             const querySnapshot = await getDocs(q)
             querySnapshot.forEach((doc) => {
-                data.push({ id: doc.id, ...doc.data() } as IHistoryMatch)
+                data.push({ 
+                    ...doc.data(),
+                    id: doc.id,
+                    home_team: [home_team, away_team].find(x => x.id === doc.data().home_team),
+                    away_team: [home_team, away_team].find(x => x.id === doc.data().away_team)
+                } as IHistoryMatch)
             })
             setMatches(data)
             setStats({
-                home_team_victorys: Math.round(data.filter(x => (x.home_team === home_team && x.winner === 'home_team') || (x.away_team === home_team && x.winner === 'away_team')).length),
-                away_team_victorys: Math.round(data.filter(x => (x.home_team === away_team && x.winner === 'away_team') || (x.away_team === away_team && x.winner === 'away_team')).length)
+                home_team_victorys: Math.round(data.filter(x => (x.home_team.id === home_team.id && x.winner === 'home_team') || (x.away_team.id === home_team.id && x.winner === 'away_team')).length),
+                away_team_victorys: Math.round(data.filter(x => (x.home_team.id === away_team.id && x.winner === 'away_team') || (x.away_team.id === away_team.id && x.winner === 'away_team')).length)
             })
         }
+
         if (!matches.length && home_team) getMatches()
     }, [home_team])
 
@@ -62,12 +61,14 @@ export function History({ home_team, away_team }: HistoryProps) {
         {}
     );
 
+    if (!home_team || !away_team) return <></>
+
     return (
         <Card className="w-fit max-w-xl">
             <CardHeader>
                 <CardTitle>Historique</CardTitle>
                 <CardDescription>
-                    {homeTeamArticle.charAt(0).toUpperCase() + homeTeamArticle.slice(1)} {homeTeamTranslated} a gagné <span className="font-bold">{stats?.home_team_victorys}</span> matchs contre {awayTeamArticle} {awayTeamTranslated} et en a perdu <span className="font-bold">{stats?.away_team_victorys}</span>. Basé sur l&apos;historique, {getTranslatedCountryPossessive(home_team, teams)} a <span className="font-bold">{Math.round(stats.home_team_victorys / (stats.home_team_victorys+stats.away_team_victorys)  * 100)}%</span> de chance de gagner et {getTranslatedCountryPossessive(away_team, teams)} en a <span className="font-bold">{Math.round(stats.away_team_victorys / (stats.home_team_victorys+stats.away_team_victorys) * 100)}%</span>.
+                    {home_team.pronoun} {home_team.french_name} a gagné <span className="font-bold">{stats?.home_team_victorys}</span> matchs contre {away_team.pronoun} {away_team.french_name} et en a perdu <span className="font-bold">{stats?.away_team_victorys}</span>. Basé sur l&apos;historique, {home_team.pronoun} {home_team.french_name} a <span className="font-bold">{Math.round(stats.home_team_victorys / (stats.home_team_victorys+stats.away_team_victorys)  * 100)}%</span> de chance de gagner et {away_team.pronoun} {away_team.french_name} en a <span className="font-bold">{Math.round(stats.away_team_victorys / (stats.home_team_victorys+stats.away_team_victorys) * 100)}%</span>.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -90,10 +91,10 @@ export function History({ home_team, away_team }: HistoryProps) {
                                                 Le {match.date} à {match.city} au {match.stadium}.
                                             </td>
                                             <td className="border p-2 text-xs">
-                                                {getTranslatedCountry(match.home_team, teams)}: {match.home_score}
+                                                {match.home_team.french_name}: {match.home_score}
                                             </td>
                                             <td className="border p-2 text-xs">
-                                                {getTranslatedCountry(match.away_team, teams)}: {match.away_score}
+                                                {match.away_team.french_name}: {match.away_score}
                                             </td>
                                         </tr>
                                     ))}

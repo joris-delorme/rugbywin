@@ -1,21 +1,23 @@
 'use client'
 import { useMatches } from "@/context/matchesContext";
 import Fuse from 'fuse.js';
-import { useState } from "react";
-import ReactCountryFlag from "react-country-flag";
-import { getCode } from 'country-list';
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getTranslatedCountry } from './match/countriesMap';
 
 export const Search = () => {
-    const { matches, teams } = useMatches();  // Extract teams here
-    const [search, setSearch] = useState("");
-    const [results, setResults] = useState<IMatche[]>([]);
+    const { matches } = useMatches()
+    const [search, setSearch] = useState("")
+    const [results, setResults] = useState<IMatche[]>([])
 
     const fuse = new Fuse(matches, {
-        keys: ['teams.team_a', 'teams.team_b'],
+        keys: ['teams.team_a.french_name', 'teams.team_b.french_name'],
         threshold: 0.9
-    });
+    })
+
+    useEffect(() => {
+        console.log('Matches :', matches);
+        
+    }, [matches])
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
@@ -40,10 +42,10 @@ export const Search = () => {
                     {results.slice(0,10).map(match => (
                         <Link href={`/match/${match.id}`} key={match.id} className="p-2 border-b hover:bg-muted/80 cursor-pointer transition-all block">
                             <div className="font-semibold">
-                                <span className="mr-2 text-xl">{teams && teams[match.teams.team_a] ? teams[match.teams.team_a].unicode : '🇬🇧'}</span>
-                                {getTranslatedCountry(match.teams.team_a, teams)} vs 
-                                <span className="mx-2 text-xl">{teams && teams[match.teams.team_b] ? teams[match.teams.team_b].unicode : '🇬🇧'}</span>
-                                {getTranslatedCountry(match.teams.team_b, teams)}
+                                <span className="mr-2 text-xl">{match.teams.team_a.unicode}</span>
+                                {match.teams.team_a.french_name} vs 
+                                <span className="mx-2 text-xl">{match.teams.team_b.unicode}</span>
+                                {match.teams.team_b.french_name}
                             </div>
                             <div className="text-sm text-muted-foreground">{match.date}</div>
                             <div className="text-sm text-muted-foreground">{match.venue}</div>

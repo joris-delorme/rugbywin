@@ -1,3 +1,11 @@
+interface ITeam {
+    id: string
+    french_name: string
+    name: string
+    pronoun: string
+    unicode: string
+};
+
 interface IMatche {
     id: string,
     date: string,
@@ -8,8 +16,8 @@ interface IMatche {
         bet_b: number,
         score_a: number | "N/A",
         score_b: number | "N/A",
-        team_a: string,
-        team_b: string,
+        team_a: ITeam,
+        team_b: ITeam,
     },
     venue: string
 }
@@ -17,8 +25,8 @@ interface IMatche {
 interface IHistoryMatch {
     id: string;
     date: string;
-    home_team: string;
-    away_team: string;
+    home_team: ITeam;
+    away_team: ITeam;
     home_score: number;
     away_score: number;
     competition: string;
