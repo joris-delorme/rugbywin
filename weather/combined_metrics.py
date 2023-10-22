@@ -18,6 +18,13 @@ clean_data['normalized_wind_speed'] = (clean_data['avg_wind_speed_kmh'] - clean_
 # Compute the combined weather index
 clean_data['weather_index'] = clean_data[['normalized_temp', 'normalized_precipitation', 'normalized_wind_speed']].mean(axis=1)
 
+# Compute the Pearson correlation coefficient for the score difference and the combined weather index
+correlation_combined = clean_data[['score_difference', 'weather_index']].corr().iloc[0, 1]
+print("")
+print("")
+print("Pearson correlation coefficient (Score Difference vs. Combined Weather Index):", round(correlation_combined, 2))
+print("")
+
 # Plot the score difference against the combined weather index
 plt.figure(figsize=(12, 6))
 plt.scatter(clean_data['weather_index'], clean_data['score_difference'], alpha=0.5)
@@ -26,6 +33,4 @@ plt.xlabel('Combined Weather Index')
 plt.ylabel('Score Difference')
 plt.show()
 
-# Compute the Pearson correlation coefficient for the score difference and the combined weather index
-correlation_combined = clean_data[['score_difference', 'weather_index']].corr().iloc[0, 1]
-correlation_combined
+
