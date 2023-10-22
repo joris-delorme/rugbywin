@@ -24,47 +24,26 @@ scraped_data = {
     'status': 'pending',
     'data': None
 }
-scrape_count = 0
-# Limit of scraping times per day
-SCRAPE_LIMIT = 500
-
-def reset_counter():
-    global scrape_count
-    scrape_count = 0
-
-# Schedule the counter reset at midnight every day
-schedule.every().day.at("00:00").do(reset_counter)
-
-# This function will keep the scheduled tasks running in the background
-def run_schedule():
-    while True:
-        current_time = datetime.now().time()
-        # Reset the counter at 00:00
-        if current_time.hour == 0 and current_time.minute == 0:
-            reset_counter()
-            # Sleep for a minute to prevent multiple resets in the same minute
-            time.sleep(60)
-        time.sleep(10)  # Check every 10 seconds
 
 # Convert american odds to european odds
 
 def american_to_european(american_odds):
+    # Check if the odds are only a "-"
+    if american_odds == "-":
+        return "N/A"
+    
     # Check if the odds are in American format
-    if american_odds.startswith("+"):
-        return round((int(american_odds[1:]) / 100) + 1, 2)
-    elif american_odds.startswith("-"):
-        return round((100 / abs(int(american_odds))) + 1, 2)
-    else:
-        # If not in American format, assume they are already in European format
-        return round(float(american_odds), 2)
-
-# Start the background thread for scheduled tasks
-thread = Thread(target=run_schedule)
-thread.start()
-
-# Register the function to be called on exit
-atexit.register(lambda: thread.join())
-
+    try:
+        if american_odds.startswith("+"):
+            return round((int(american_odds[1:]) / 100) + 1, 2)
+        elif american_odds.startswith("-"):
+            return round((100 / abs(int(american_odds[1:]))) + 1, 2)
+        else:
+            # If not in American format, assume they are already in European format
+            return round(float(american_odds), 2)
+    except ValueError:
+        # If the conversion to int or float fails, return N/A or another appropriate value
+        return "N/A"
 
 # Oldbets script beginning
 
@@ -174,10 +153,7 @@ def fetch_oldbets():
 
 def fetch_rugby_data():
     try:
-        global scrape_count, scraped_data
-
-        if scrape_count >= SCRAPE_LIMIT:
-            return scraped_data
+        global scraped_data
 
         # Setup Chrome options for headless mode
         chrome_options = Options()
@@ -345,11 +321,19 @@ def fetch_rugby_data():
         # End of the unibet script
 
         odds = fetch_oldbets()  # Fetch odds data
+        
+        # Function to convert team name to ID format
+        def team_name_to_id(name):
+            return name.lower().replace(" ", "_")
 
         # Assigning bets to matches in all_matches_info
         for match_info in all_matches_info:
-            team_a = match_info["teams"]["team_a"]
-            team_b = match_info["teams"]["team_b"]
+            team_a = team_name_to_id(match_info["teams"]["team_a"])
+            team_b = team_name_to_id(match_info["teams"]["team_b"])
+
+            # Insert the French names into the teams dictionary
+            match_info["teams"]["team_a"] = team_a
+            match_info["teams"]["team_b"] = team_b
 
             # Check if the match has finished
             if match_info["status"].lower() == "result":
@@ -376,10 +360,7 @@ def fetch_rugby_data():
             'status': 'success',
             'data': all_matches_info
         }
-
-        scrape_count += 1
-        print("The scrape count is : ", scrape_count, "/500")
-
+        
         return scraped_data
     
     
