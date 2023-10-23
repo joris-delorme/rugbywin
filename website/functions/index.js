@@ -46,6 +46,42 @@ exports.newsletter = functions.https.onRequest((req, res) => {
   })
 })
 
+exports.ai = functions.https.onRequest((req, res) => {
+  cors(req, res, async () => {
+
+    if (!req.body.team_a || !req.body.team_b) {
+      res.status(500).send('Need tow teams...')
+      return
+    }
+
+    try {
+      const response = await fetch("https://api.obviously.ai/v3/model/automl/predict/single/ffc23890-6117-11ee-a611-4715fb958c39", {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'ApiKey 7d49ef56-6110-11ee-a67f-aed432a5522d'
+        },
+        body: JSON.stringify({
+          "home_team": req.body.team_a,
+          "away_team": req.body.team_b,
+          "neutral": "False",
+          "world_cup": "True"
+        })
+      })
+
+      const data = await response.json()
+      console.log('Data :', data);
+
+      res.status(200).send(data)
+      return
+    } catch (err) {
+      res.status(403).send(err.message)
+      return
+    }
+  })
+})
+
 exports.triggernewmatch = functions.firestore
   .document("matches/{documentId}")
   .onCreate(async (snap, context) => {
