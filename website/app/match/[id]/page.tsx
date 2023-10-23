@@ -84,9 +84,8 @@ const Page = () => {
                 <MapComponent lat={match?.latitude || 0} lon={match?.longitude || 0} />
             </div>
             <div className="bg-background mt-[70vh] lg:p-20 p-10 h-fit">
-                <div className="">
-                    <h2 className="sm:text-3xl text-xl mb-20 text-center max-w-2xl font-bold mx-auto">Notre <span className='gradient-text'>intelligence artificiel</span> prédie que <span className="whitespace-nowrap">{match?.teams.team_a.pronoun} {match?.teams.team_a.french_name}</span> à <span className="font-black underline">{Math.round(AI.home_team*100)}%</span> de chance de gagner et {match?.teams.team_b.pronoun} {match?.teams.team_b.french_name} en a <span className="font-black underline">{Math.round(AI.away_team*100)}%</span>.</h2>
-                </div>
+                    {AI?.home_team && <h2 className="sm:text-3xl text-xl mb-20 text-center max-w-2xl font-bold mx-auto">Notre <span className='gradient-text'>intelligence artificiel</span> prédie que <span className="whitespace-nowrap">{match?.teams?.team_a?.pronoun} {match?.teams?.team_a?.french_name}</span> à <span className="font-black underline">{Math.round(AI?.home_team*100)}%</span> de chance de gagner et {match?.teams?.team_b?.pronoun} {match?.teams?.team_b?.french_name} en a <span className="font-black underline">{Math.round(AI?.away_team*100)}%</span>.</h2>}
+
                 <div className="flex gap-4">
                     <History home_team={match?.teams.team_a} away_team={match?.teams.team_b} />
                     <div className="grid gap-4 w-full">
