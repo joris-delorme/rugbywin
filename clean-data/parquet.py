@@ -1,41 +1,27 @@
 import pandas as pd
 
-weather = pd.read_parquet("../data/daily_weather.parquet", engine='pyarrow')
-matches = pd.read_csv("../data/rugby_dataset.csv")
+# 1. Load both files
+weather_df = pd.read_parquet('../data/daily_weather.parquet')
+rugby_df = pd.read_csv('../data/rugby_dataset.csv')
 
-#weather_columns = ['station_id', 'city_name', 'date', 'season', 'avg_temp_c', 'min_temp_c', 'max_temp_c', 'precipitation_mm', 'snow_depth_mm', 'avg_wind_dir_deg', 'avg_wind_speed_kmh', 'peak_wind_gust_kmh', 'avg_sea_level_pres_hpa', 'sunshine_total_min']
-#matches_columns = ['ID', 'date', 'home_team', 'away_team', 'home_score', 'away_score', 'competition', 'stadium', 'city', 'country', 'neutral', 'world_cup', 'winner']
+weather_df = weather_df.rename(columns={'city_name': 'city'})
 
-def get_columns_from_parquet(file):
-    return file.columns.tolist()
+# 2. Clean and preprocess the data
 
-def get_unique_values(file, column):
-    return file[column].unique().tolist()
+# Convert the date columns to datetime format and extract only the date
+weather_df['date'] = pd.to_datetime(weather_df['date']).dt.date
+rugby_df['date'] = pd.to_datetime(rugby_df['date']).dt.date
 
+# For weather data, if there are multiple logs for the same city and date, we'll group by city and date and take the first occurrence
+weather_df = weather_df.groupby(['city', 'date']).first().reset_index()
 
-dates = get_unique_values(matches, 'date')
-unique_dates_in_weather = get_unique_values(weather, 'date')
-missing_dates = [pd.to_datetime(date).date() for date in dates if pd.to_datetime(date).date() not in unique_dates_in_weather]
+# 3. Compare and count the rows
 
-cities = get_unique_values(matches, 'city')
-unique_cities_in_weather = get_unique_values(weather, 'city_name')
-missing_cities = [city for city in cities if city not in unique_cities_in_weather]
+# Merge the two datasets based on 'city' and 'date'
+merged_df = pd.merge(rugby_df, weather_df, on=['city', 'date'], how='inner')
 
-#print(len(cities))
-#print(len(missing_cities))
-#print(weather['date'].iloc[0])
+# Get the number of rows where we have the weather for a rugby match
+num_rows = merged_df.shape[0]
 
-#118
-#67
-#1874-02-23
-
-# Output results
-if missing_cities:
-    print(f"The following cities are missing from the parquet file: {len(missing_cities)}")
-else:
-    print("All cities are present in the parquet file!")
-
-if missing_dates:
-    print(f"The following dates are missing from the parquet file: {len(missing_dates)}")
-else:
-    print("All dates are present in the parquet file!")
+print(f"There are {num_rows} rows where we have the weather for a rugby match.")
+merged_df.to_csv('merged_rugby_weather.csv', index=False)

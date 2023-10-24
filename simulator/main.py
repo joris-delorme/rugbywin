@@ -24,7 +24,7 @@ def get_prediction(home_team, away_team):
         "home_team": home_team,
         "away_team": away_team,
         "neutral": "True",  # Neutral ground
-        "world_cup": "False"  # Not a world cup match
+        "world_cup": "True"  # Not a world cup match
     }
 
     headers = {

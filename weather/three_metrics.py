@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Load the dataset
-data = pd.read_csv('clean-data/merged_rugby_weather.csv')
+data = pd.read_csv('../clean-data/merged_rugby_weather.csv')
 
 # Calculate the score difference
 data['score_difference'] = data['home_score'] - data['away_score']

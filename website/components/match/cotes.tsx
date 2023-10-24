@@ -1,6 +1,6 @@
 "use client"
 
-import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts"
+import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts"
 import {
   Card,
   CardContent,
