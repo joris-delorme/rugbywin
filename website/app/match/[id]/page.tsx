@@ -46,9 +46,7 @@ const Page = () => {
     }
 
     useEffect(() => {
-        if (!match) {
-            console.log('eee');
-            
+        if (!match) {            
             const selectMatch = matches.find(x => x.id === params.id)
             if (selectMatch?.teams.team_a.name && selectMatch?.teams.team_b.name) {                
                 setMatch(selectMatch)
@@ -73,22 +71,22 @@ const Page = () => {
                 </div>
                 {//@ts-ignore
                 match?.teams.bet_a !== 'N/A' && <div className="text-3xl text-center font-black flex items-center justify-around w-full">
-                    <span>{match?.teams.bet_a}</span> <span className="flex flex-col text-sm font-normal">côte</span> <span>{match?.teams.bet_b}</span>
+                    <span>{match?.teams.bet_a}</span> <span className="flex flex-col text-sm font-normal">cotes</span> <span>{match?.teams.bet_b}</span>
                 </div>}
                 {//@ts-ignore
                 match?.teams.bet_a !== 'N/A' && <div className="text-3xl text-center items-center font-black flex justify-around w-full">
-                    <span>{match?.teams.score_a}</span> <span className="flex flex-col text-sm font-normal">score</span> <span>{match?.teams.score_b}</span>
+                    <span>{match?.teams.score_a}</span> <span className="flex flex-col text-sm font-normal">scores</span> <span>{match?.teams.score_b}</span>
                 </div>}
             </div>
             <div className="h-[80vh] -z-20 fixed top-0 left-0 w-full">
                 <MapComponent lat={match?.latitude || 0} lon={match?.longitude || 0} />
             </div>
             <div className="bg-background mt-[70vh] lg:p-20 p-10 h-fit">
-                    {AI?.home_team && <h2 className="sm:text-3xl text-xl mb-20 text-center max-w-2xl font-bold mx-auto">Notre <span className='gradient-text'>intelligence artificielle</span> prédit que <span className="whitespace-nowrap">{match?.teams?.team_a?.pronoun} {match?.teams?.team_a?.french_name}</span> a <span className="font-black underline">{Math.round(AI?.home_team*100)}%</span> de chance de gagner et {match?.teams?.team_b?.pronoun} {match?.teams?.team_b?.french_name} en a <span className="font-black underline">{Math.round(AI?.away_team*100)}%</span>.</h2>}
+                    {AI?.home_team ? <h2 className="sm:text-3xl text-xl mb-20 text-center max-w-2xl font-bold mx-auto">Notre <span className='gradient-text'>intelligence artificielle</span> prédit que <span className="whitespace-nowrap">{match?.teams?.team_a?.pronoun} {match?.teams?.team_a?.french_name}</span> a <span className="font-black underline">{Math.round(AI?.home_team*100)}%</span> de chance de gagner et {match?.teams?.team_b?.pronoun} {match?.teams?.team_b?.french_name} en a <span className="font-black underline">{Math.round(AI?.away_team*100)}%</span>.</h2> : <></>}
 
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-wrap">
                     <History home_team={match?.teams.team_a} away_team={match?.teams.team_b} />
-                    <div className="grid gap-4 w-full">
+                    <div className="grid gap-4 max-w-xl w-full">
                         <CardsMetric team={match?.teams.team_b} />
                         <CardsMetric team={match?.teams.team_a} />
                     </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts"
+import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts"
 import {
   Card,
   CardContent,
@@ -39,13 +39,15 @@ export function CardsMetric({ team }: { team?: ITeam }) {
     }
   }, [team, matches])
 
+  useEffect(() => {
+    console.log(cotes);
+    
+  }, [cotes])
+
   return (
-    <Card className="flex-1">
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>Exercise Minutes</CardTitle>
-        <CardDescription>
-          Your excercise minutes are ahead of where you normally are.
-        </CardDescription>
+        <CardTitle>Historique des cotes de {team?.pronoun} {team?.french_name}</CardTitle>
       </CardHeader>
       <CardContent className="pb-4">
         {cotes.length === 0 ?
@@ -55,6 +57,7 @@ export function CardsMetric({ team }: { team?: ITeam }) {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={cotes}
+                width={300} height={100}
                 margin={{
                   top: 5,
                   right: 10,
@@ -72,7 +75,7 @@ export function CardsMetric({ team }: { team?: ITeam }) {
                               <span className="text-[0.70rem] uppercase text-muted-foreground">
                                 {(payload[0].payload as IBet).team_a}
                               </span>
-                              <span className="font-bold text-muted-foreground">
+                              <span className="font-bold">
                                 {payload[0].value}
                               </span>
                             </div>
@@ -80,7 +83,7 @@ export function CardsMetric({ team }: { team?: ITeam }) {
                               <span className="text-[0.70rem] uppercase text-muted-foreground">
                                 {(payload[0].payload as IBet).team_b}
                               </span>
-                              <span className="font-bold">
+                              <span className="font-bold text-muted-foreground">
                                 {payload[1].value}
                               </span>
                             </div>
@@ -95,7 +98,7 @@ export function CardsMetric({ team }: { team?: ITeam }) {
                 <Line
                   type="monotone"
                   strokeWidth={2}
-                  dataKey="team_b_bet"
+                  dataKey="team_a_bet"
                   activeDot={{
                     r: 8,
                   }}
@@ -105,13 +108,13 @@ export function CardsMetric({ team }: { team?: ITeam }) {
                 />
                 <Line
                   type="monotone"
-                  dataKey="team_a_bet"
+                  dataKey="team_b_bet"
                   strokeWidth={2}
                   activeDot={{
                     r: 6,
                   }}
                   style={
-                    { opacity: 0.5 } as React.CSSProperties
+                    { opacity: 0.3 } as React.CSSProperties
                   }
                 />
               </LineChart>
