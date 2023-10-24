@@ -17,7 +17,7 @@ export default function Home() {
         </svg>
       </section>
       <div className="absolute top-0 left-0 w-screen -z-20 max-h-screen overflow-y-hidden h-screen">
-        <svg  xmlns="http://www.w3.org/2000/svg" width="1728" height="2103" viewBox="0 0 1728 2103" fill="none">
+        <svg className='fixed left-0' xmlns="http://www.w3.org/2000/svg" width="1728" height="2103" viewBox="0 0 1728 2103" fill="none">
           <g opacity="0.32" filter="url(#filter0_f_1131_254)">
             <path d="M2048.55 -952L2088.86 -911.695L1381.75 -204.588L888.447 265L1341.45 -244.893L2048.55 -952Z" fill="url(#paint0_linear_1131_254)" />
             <path d="M1712.55 -935L1752.86 -894.695L1045.75 -187.588L552.447 282L1005.45 -227.893L1712.55 -935Z" fill="url(#paint1_linear_1131_254)" />
