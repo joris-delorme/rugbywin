@@ -83,7 +83,9 @@ const Page = () => {
             </div>
             <div className="bg-background mt-[70vh] lg:p-20 p-10 h-fit">
                     {AI?.home_team ? <h2 className="sm:text-3xl text-xl mb-20 text-center max-w-2xl font-bold mx-auto">Notre <span className='gradient-text'>intelligence artificielle</span> prédit que <span className="whitespace-nowrap">{match?.teams?.team_a?.pronoun} {match?.teams?.team_a?.french_name}</span> a <span className="font-black underline">{Math.round(AI?.home_team*100)}%</span> de chance de gagner et {match?.teams?.team_b?.pronoun} {match?.teams?.team_b?.french_name} en a <span className="font-black underline">{Math.round(AI?.away_team*100)}%</span>.</h2> : <></>}
-
+                    {Math.round((1/(match?.teams.bet_a || 1)*0.7+(AI.home_team || 0)*0.3)*100) > Math.round((1/(match?.teams.bet_b || 1)*0.7+(AI.away_team || 0)*0.3)*100) ? 
+                    <p className=" text-center mb-20">D&apos;après nos prédictions le gagnant sera {match?.teams?.team_a?.pronoun} {match?.teams?.team_a?.french_name}.</p>:
+                    <p className=" text-center mb-20">D&apos;après nos prédictions le gagnant sera {match?.teams?.team_b?.pronoun} {match?.teams?.team_b?.french_name}.</p> }
                 <div className="flex gap-4 flex-wrap justify-center">
                     <History home_team={match?.teams.team_a} away_team={match?.teams.team_b} />
                     <div className="grid gap-4 max-w-xl w-full">
